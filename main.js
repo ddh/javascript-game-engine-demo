@@ -104,9 +104,10 @@ Background.prototype.draw = function (ctx) {
     //ctx.fillRect(0, 500, 800, 300);
     ctx.drawImage(ASSET_MANAGER.getAsset("./img/8bitbg.png"), 0, 0);
     this.game.ctx.fillText("This is Spaz.", 300, 80);
-    this.game.ctx.fillText("He can JUMP [spacebar].", 300, 110);
-    this.game.ctx.fillText("He can RUN   [← →].", 300, 140);
-    this.game.ctx.fillText("He can't escape! [wall collisions]", 300, 170);
+    this.game.ctx.fillText("He can DANCE!     [idle]", 300, 110);
+    this.game.ctx.fillText("He can RUN!         [← →]", 300, 140);
+    this.game.ctx.fillText("He can JUMP!       [spacebar]", 300, 170);
+    this.game.ctx.fillText("He can't ESCAPE! [wall collisions]", 300, 200);
     Entity.prototype.draw.call(this);
 }
 
