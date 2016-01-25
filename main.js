@@ -96,8 +96,9 @@ Background.prototype.update = function () {
 }
 
 Background.prototype.draw = function (ctx) {
-    ctx.fillStyle = "Green";
-    ctx.fillRect(0, 500, 800, 300);
+    ctx.fillStyle = "Blue";
+    //ctx.fillRect(0, 500, 800, 300);
+    ctx.drawImage(ASSET_MANAGER.getAsset("./img/8bitbg.png"), 0, 0);
     Entity.prototype.draw.call(this);
 }
 
@@ -114,7 +115,7 @@ function Spazz(game) {
 
     // States:
     this.standing = true;
-    this.idle = false;
+    this.idle = 0;
     this.jumping = false;
     this.running = false;
     this.skidLeft = false;
@@ -122,7 +123,7 @@ function Spazz(game) {
 
     // Entity properties:
     this.radius = 50;
-    this.ground = 450;
+    this.ground = 300;
     this.speed = 5;
     this.width = 50;
     this.height = 50;
@@ -133,8 +134,6 @@ Spazz.prototype = new Entity();
 Spazz.prototype.constructor = Spazz;
 
 Spazz.prototype.update = function () {
-
-
 
     // Jumping:
     if (this.game.space) this.jumping = true;
@@ -174,6 +173,7 @@ Spazz.prototype.update = function () {
 }
 
 Spazz.prototype.draw = function (ctx) {
+
     if (this.jumping) {
         this.jumpAnimation.drawFrame(this.game.clockTick, ctx, this.x, this.y);
     }
@@ -191,7 +191,7 @@ Spazz.prototype.draw = function (ctx) {
 
 var ASSET_MANAGER = new AssetManager();
 
-ASSET_MANAGER.queueDownload("./img/stage.jpg");
+ASSET_MANAGER.queueDownload("./img/8bitbg.png");
 ASSET_MANAGER.queueDownload("./img/spazz_frames.png");
 
 
