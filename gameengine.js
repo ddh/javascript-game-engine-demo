@@ -47,13 +47,14 @@ Timer.prototype.tick = function () {
     // I don't understand game delta
     var gameDelta = Math.min(wallDelta, this.maxStep); // lockstep
     this.gameTime += gameDelta; // Update total time passed in game.
+    //console.log(this.gameTime);
     return gameDelta;
 }
 
 // Game Engine has entities
 function GameEngine() {
     this.entities = [];
-    this.showOutlines = true; // Show circles around entities for debugging
+    this.showOutlines = false; // Show circles around entities for debugging
     this.ctx = null;
     this.click = null;
     this.mouse = null;
@@ -96,9 +97,18 @@ GameEngine.prototype.startInput = function () {
 
     this.ctx.canvas.addEventListener("keydown", function (e) {
         if (String.fromCharCode(e.which) === ' ') that.space = true;
+        if(e.which===39) that.right = true;
+        if(e.which===37) that.left = true;
 //        console.log(e);
         e.preventDefault(); // Spacebar's devault is to scroll down page
     }, false);
+
+    this.ctx.canvas.addEventListener("keyup", function(e) {
+        if(e.which===39) that.right = false;
+        if(e.which===37) that.left = false;
+    })
+
+
 
     console.log('Input started');
 }

@@ -4,7 +4,7 @@
  * Assignment 1 - Animation
  * main.js
  *
- * Main for Assignment 1.
+ * Main for Assignment 1. Animating Spazz from the Jazz Jackrabbit video game series by Epic MegaGames.
  *
  * Resources: Based off of Chris Marriott's main.js
  */
@@ -61,11 +61,11 @@ Animation.prototype.drawFrame = function (tick, ctx, x, y, scaleBy) {
     var locY = y;
     var offset = vindex === 0 ? this.startX : 0;
     ctx.drawImage(this.spriteSheet,
-                  index * this.frameWidth + offset, vindex * this.frameHeight + this.startY,  // source from sheet
-                  this.frameWidth, this.frameHeight,
-                  locX, locY,
-                  this.frameWidth * scaleBy,
-                  this.frameHeight * scaleBy);
+        index * this.frameWidth + offset, vindex * this.frameHeight + this.startY,  // source from sheet
+        this.frameWidth, this.frameHeight,
+        locX, locY,
+        this.frameWidth * scaleBy,
+        this.frameHeight * scaleBy);
 }
 
 /**
@@ -86,7 +86,7 @@ Animation.prototype.isDone = function () {
 
 function Background(game) {
     Entity.call(this, game, 0, 400); // What does "call" do? Constructor?
-    this.radius = 200;
+    //this.radius = 200;
 }
 
 Background.prototype = new Entity();
@@ -96,55 +96,93 @@ Background.prototype.update = function () {
 }
 
 Background.prototype.draw = function (ctx) {
-    ctx.fillStyle = "Blue";
-    ctx.fillRect(0,500,800,300);
+    ctx.fillStyle = "Green";
+    ctx.fillRect(0, 500, 800, 300);
     Entity.prototype.draw.call(this);
 }
 
-function Unicorn(game) {
-    this.animation = new Animation(ASSET_MANAGER.getAsset("./img/RobotUnicorn.png"), 0, 0, 206, 110, 0.02, 30, true, true);
-    this.jumpAnimation = new Animation(ASSET_MANAGER.getAsset("./img/RobotUnicorn.png"), 618, 334, 174, 138, 0.02, 40, false, true);
-    this.jumping = false; // Whether Unicorn is in 'jumping' state
-    this.radius = 100; // Debug circle radius
-    this.ground = 400; // Where the ground is for Unicorn
-    Entity.call(this, game, 0, 400); // Construct the Unicorn.
+function Spazz(game) {
+
+    // Animations:
+    this.standAnimation = new Animation(ASSET_MANAGER.getAsset("./img/spazz_frames.png"), 0, 0, 56, 52, 0.1, 6, true, false);
+    this.idleAnimation = new Animation(ASSET_MANAGER.getAsset("./img/spazz_frames.png"), 336, 0, 56, 52, 0.1, 20, true, false);
+    this.runRightAnimation = new Animation(ASSET_MANAGER.getAsset("./img/spazz_frames.png"), 1456, 0, 56, 52, 0.1, 8, true, false);
+    this.runLeftAnimation = new Animation(ASSET_MANAGER.getAsset("./img/spazz_frames.png"), 1904, 0, 56, 52, 0.1, 8, true, false);
+    this.skidRightAnimation = new Animation(ASSET_MANAGER.getAsset("./img/spazz_frames.png"), 2352, 0, 56, 52, 0.1, 14, false, false);
+    this.skidLeftAnimation = new Animation(ASSET_MANAGER.getAsset("./img/spazz_frames.png"), 3136, 0, 56, 52, 0.1, 14, false, false);
+    this.jumpAnimation = new Animation(ASSET_MANAGER.getAsset("./img/spazz_frames.png"), 3920, 0, 56, 52, 0.05, 17, false, false);
+
+    // States:
+    this.standing = true;
+    this.idle = false;
+    this.jumping = false;
+    this.running = false;
+    this.skidLeft = false;
+    this.skidRight = false;
+
+    // Entity properties:
+    this.radius = 50;
+    this.ground = 450;
+    this.speed = 5;
+    this.width = 50;
+    this.height = 50;
+    Entity.call(this, game, 0, this.ground);
 }
 
-Unicorn.prototype = new Entity();
-Unicorn.prototype.constructor = Unicorn;
+Spazz.prototype = new Entity();
+Spazz.prototype.constructor = Spazz;
 
-Unicorn.prototype.update = function () {
-    if (this.game.space) this.jumping = true; // If game has detected space, jumping is set to true.
+Spazz.prototype.update = function () {
 
-    // If Unicorn is set to 'jump':
+
+
+    // Jumping:
+    if (this.game.space) this.jumping = true;
+
+    // If Spazz is set to jump:
     if (this.jumping) {
 
-        // If Unicorn is finished jumping:
+        // If Spaz is finished jumping:
         if (this.jumpAnimation.isDone()) {
             // Reset jump animation timer
             this.jumpAnimation.elapsedTime = 0;
             // Reset 'jump' state.
             this.jumping = false;
+
         }
         var jumpDistance = this.jumpAnimation.elapsedTime / this.jumpAnimation.totalTime;
-        var totalHeight = 200;
+        var totalHeight = 100;
 
         if (jumpDistance > 0.5)
             jumpDistance = 1 - jumpDistance;
 
         //var height = jumpDistance * 2 * totalHeight;
-        var height = totalHeight*(-4 * (jumpDistance * jumpDistance - jumpDistance));
+        var height = totalHeight * (-2 * (jumpDistance * jumpDistance - jumpDistance));
         this.y = this.ground - height;
+    }
+
+    // Running right and left:
+    this.game.right || this.game.left ? this.running = true : this.running = false;
+
+
+    // Running and boundary collisions:
+    if (this.running) {
+        if (this.game.right && this.x < this.game.surfaceWidth - this.width) this.x += this.speed;
+        if (this.game.left && this.x > 0) this.x -= this.speed;
     }
     Entity.prototype.update.call(this);
 }
 
-Unicorn.prototype.draw = function (ctx) {
+Spazz.prototype.draw = function (ctx) {
     if (this.jumping) {
-        this.jumpAnimation.drawFrame(this.game.clockTick, ctx, this.x + 17, this.y - 34);
+        this.jumpAnimation.drawFrame(this.game.clockTick, ctx, this.x, this.y);
+    }
+    else if (this.running) {
+        if (this.game.right) this.runRightAnimation.drawFrame(this.game.clockTick, ctx, this.x, this.y);
+        if (this.game.left) this.runLeftAnimation.drawFrame(this.game.clockTick, ctx, this.x, this.y);
     }
     else {
-        this.animation.drawFrame(this.game.clockTick, ctx, this.x, this.y);
+        this.standAnimation.drawFrame(this.game.clockTick, ctx, this.x, this.y);
     }
     Entity.prototype.draw.call(this);
 }
@@ -153,20 +191,22 @@ Unicorn.prototype.draw = function (ctx) {
 
 var ASSET_MANAGER = new AssetManager();
 
-ASSET_MANAGER.queueDownload("./img/RobotUnicorn.png");
+ASSET_MANAGER.queueDownload("./img/stage.jpg");
+ASSET_MANAGER.queueDownload("./img/spazz_frames.png");
+
 
 ASSET_MANAGER.downloadAll(function () {
-    console.log("starting up da sheild");
+    console.log("Starting asset downloads");
     var canvas = document.getElementById('gameWorld');
     var ctx = canvas.getContext('2d');
 
     var gameEngine = new GameEngine();
     var bg = new Background(gameEngine);
-    var unicorn = new Unicorn(gameEngine);
+    var spazz = new Spazz(gameEngine);
 
     gameEngine.addEntity(bg);
-    gameEngine.addEntity(unicorn);
- 
+    gameEngine.addEntity(spazz);
+
     gameEngine.init(ctx);
     gameEngine.start();
 });
