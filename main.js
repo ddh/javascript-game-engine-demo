@@ -100,9 +100,13 @@ Background.prototype.update = function () {
 }
 
 Background.prototype.draw = function (ctx) {
-    ctx.fillStyle = "Blue";
+    ctx.fillStyle = "Black";
     //ctx.fillRect(0, 500, 800, 300);
     ctx.drawImage(ASSET_MANAGER.getAsset("./img/8bitbg.png"), 0, 0);
+    this.game.ctx.fillText("This is Spaz.", 300, 80);
+    this.game.ctx.fillText("He can JUMP [spacebar].", 300, 110);
+    this.game.ctx.fillText("He can RUN   [← →].", 300, 140);
+    this.game.ctx.fillText("He can't escape! [wall collisions]", 300, 170);
     Entity.prototype.draw.call(this);
 }
 
@@ -203,6 +207,7 @@ ASSET_MANAGER.downloadAll(function () {
     console.log("Starting asset downloads");
     var canvas = document.getElementById('gameWorld');
     var ctx = canvas.getContext('2d');
+    ctx.font = "25px Comic Sans MS";
 
     var gameEngine = new GameEngine();
     var bg = new Background(gameEngine);
