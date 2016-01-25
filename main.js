@@ -4,9 +4,13 @@
  * Assignment 1 - Animation
  * main.js
  *
- * Main for Assignment 1. Animating Spazz from the Jazz Jackrabbit video game series by Epic MegaGames.
+ * Main for Assignment 1. Animating Spaz from the Jazz Jackrabbit video game series by Epic MegaGames.
  *
- * Resources: Based off of Chris Marriott's main.js
+ * Resources:
+ *              Code: Based off of Chris Marriott's main.js
+ *              Background Image: http://imgur.com/gallery/VZ9H2
+ *              Spaz sprites: http://www.spriters-resource.com/pc_computer/jazzjackrabbit2thesecretfiles/sheet/22144/
+ *
  */
 
 /**
@@ -102,16 +106,16 @@ Background.prototype.draw = function (ctx) {
     Entity.prototype.draw.call(this);
 }
 
-function Spazz(game) {
+function Spaz(game) {
 
     // Animations:
-    this.standAnimation = new Animation(ASSET_MANAGER.getAsset("./img/spazz_frames.png"), 0, 0, 56, 52, 0.1, 6, true, false);
-    this.idleAnimation = new Animation(ASSET_MANAGER.getAsset("./img/spazz_frames.png"), 336, 0, 56, 52, 0.1, 20, true, false);
-    this.runRightAnimation = new Animation(ASSET_MANAGER.getAsset("./img/spazz_frames.png"), 1456, 0, 56, 52, 0.1, 8, true, false);
-    this.runLeftAnimation = new Animation(ASSET_MANAGER.getAsset("./img/spazz_frames.png"), 1904, 0, 56, 52, 0.1, 8, true, false);
-    this.skidRightAnimation = new Animation(ASSET_MANAGER.getAsset("./img/spazz_frames.png"), 2352, 0, 56, 52, 0.1, 14, false, false);
-    this.skidLeftAnimation = new Animation(ASSET_MANAGER.getAsset("./img/spazz_frames.png"), 3136, 0, 56, 52, 0.1, 14, false, false);
-    this.jumpAnimation = new Animation(ASSET_MANAGER.getAsset("./img/spazz_frames.png"), 3920, 0, 56, 52, 0.05, 17, false, false);
+    this.standAnimation = new Animation(ASSET_MANAGER.getAsset("./img/spaz_frames.png"), 0, 0, 56, 52, 0.1, 6, true, false);
+    this.idleAnimation = new Animation(ASSET_MANAGER.getAsset("./img/spaz_frames.png"), 336, 0, 56, 52, 0.1, 20, true, false);
+    this.runRightAnimation = new Animation(ASSET_MANAGER.getAsset("./img/spaz_frames.png"), 1456, 0, 56, 52, 0.1, 8, true, false);
+    this.runLeftAnimation = new Animation(ASSET_MANAGER.getAsset("./img/spaz_frames.png"), 1904, 0, 56, 52, 0.1, 8, true, false);
+    this.skidRightAnimation = new Animation(ASSET_MANAGER.getAsset("./img/spaz_frames.png"), 2352, 0, 56, 52, 0.1, 14, false, false);
+    this.skidLeftAnimation = new Animation(ASSET_MANAGER.getAsset("./img/spaz_frames.png"), 3136, 0, 56, 52, 0.1, 14, false, false);
+    this.jumpAnimation = new Animation(ASSET_MANAGER.getAsset("./img/spaz_frames.png"), 3920, 0, 56, 52, 0.05, 17, false, false);
 
     // States:
     this.standing = true;
@@ -130,15 +134,15 @@ function Spazz(game) {
     Entity.call(this, game, 0, this.ground);
 }
 
-Spazz.prototype = new Entity();
-Spazz.prototype.constructor = Spazz;
+Spaz.prototype = new Entity();
+Spaz.prototype.constructor = Spaz;
 
-Spazz.prototype.update = function () {
+Spaz.prototype.update = function () {
 
     // Jumping:
     if (this.game.space) this.jumping = true;
 
-    // If Spazz is set to jump:
+    // If Spaz is set to jump:
     if (this.jumping) {
 
         // If Spaz is finished jumping:
@@ -172,7 +176,7 @@ Spazz.prototype.update = function () {
     Entity.prototype.update.call(this);
 }
 
-Spazz.prototype.draw = function (ctx) {
+Spaz.prototype.draw = function (ctx) {
 
     if (this.jumping) {
         this.jumpAnimation.drawFrame(this.game.clockTick, ctx, this.x, this.y);
@@ -192,7 +196,7 @@ Spazz.prototype.draw = function (ctx) {
 var ASSET_MANAGER = new AssetManager();
 
 ASSET_MANAGER.queueDownload("./img/8bitbg.png");
-ASSET_MANAGER.queueDownload("./img/spazz_frames.png");
+ASSET_MANAGER.queueDownload("./img/spaz_frames.png");
 
 
 ASSET_MANAGER.downloadAll(function () {
@@ -202,10 +206,10 @@ ASSET_MANAGER.downloadAll(function () {
 
     var gameEngine = new GameEngine();
     var bg = new Background(gameEngine);
-    var spazz = new Spazz(gameEngine);
+    var spaz = new Spaz(gameEngine);
 
     gameEngine.addEntity(bg);
-    gameEngine.addEntity(spazz);
+    gameEngine.addEntity(spaz);
 
     gameEngine.init(ctx);
     gameEngine.start();
