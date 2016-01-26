@@ -49,7 +49,7 @@ Timer.prototype.tick = function () {
     this.gameTime += gameDelta; // Update total time passed in game.
     //console.log(this.gameTime);
     return gameDelta;
-}
+};
 
 // Game Engine has entities
 function GameEngine() {
@@ -74,7 +74,7 @@ GameEngine.prototype.init = function (ctx) {
     this.startInput(); // Allow input controls
     this.timer = new Timer(); // Create game Timer
     console.log('game initialized');
-}
+};
 
 /**
  * Begin game.
@@ -86,7 +86,7 @@ GameEngine.prototype.start = function () {
         that.loop();
         requestAnimFrame(gameLoop, that.ctx.canvas);
     })();
-}
+};
 
 /**
  * Begin listening for inputs.
@@ -99,19 +99,20 @@ GameEngine.prototype.startInput = function () {
         if (String.fromCharCode(e.which) === ' ') that.space = true;
         if(e.which===39) that.right = true;
         if(e.which===37) that.left = true;
-//        console.log(e);
+        if(e.which===68) that.showOutlines ^= true;
+        //console.log(e);
         e.preventDefault(); // Spacebar's devault is to scroll down page
     }, false);
 
     this.ctx.canvas.addEventListener("keyup", function(e) {
         if(e.which===39) that.right = false;
         if(e.which===37) that.left = false;
-    })
+    });
 
 
 
     console.log('Input started');
-}
+};
 
 /**
  * Push an entity to the GameEngine's array of entities
@@ -120,7 +121,7 @@ GameEngine.prototype.startInput = function () {
 GameEngine.prototype.addEntity = function (entity) {
     console.log('added entity');
     this.entities.push(entity);
-}
+};
 
 /**
  * Draw entities onto canvas
@@ -138,7 +139,7 @@ GameEngine.prototype.draw = function () {
         this.entities[i].draw(this.ctx);
     }
     this.ctx.restore();
-}
+};
 
 /**
  * Update each entity, removing those flagged for removal.
@@ -162,7 +163,7 @@ GameEngine.prototype.update = function () {
             this.entities.splice(i, 1);
         }
     }
-}
+};
 
 /**
  * Basic loop for game.
@@ -176,7 +177,7 @@ GameEngine.prototype.loop = function () {
     this.update();
     this.draw();
     this.space = null; // Clear out space at end of loop, otherwise it will keep firing
-}
+};
 
 
 /**
@@ -195,18 +196,20 @@ function Entity(game, x, y) {
 
 // Why is there no function?
 Entity.prototype.update = function () {
-}
+    this.centerX = this.x + this.width / 2;
+    this.centerY = this.y + this.height / 2;
+};
 
 // Anything defined here is inherited by all entities (the outline for debugging).
 Entity.prototype.draw = function (ctx) {
     if (this.game.showOutlines && this.radius) {
         this.game.ctx.beginPath();
         this.game.ctx.strokeStyle = "green";
-        this.game.ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
+        this.game.ctx.arc(this.centerX, this.centerY, this.radius, 0, Math.PI * 2, false);
         this.game.ctx.stroke(); // Paint it on
         this.game.ctx.closePath();
     }
-}
+};
 
 Entity.prototype.rotateAndCache = function (image, angle) {
     var offscreenCanvas = document.createElement('canvas');
@@ -223,4 +226,4 @@ Entity.prototype.rotateAndCache = function (image, angle) {
     //offscreenCtx.strokeStyle = "red";
     //offscreenCtx.strokeRect(0,0,size,size);
     return offscreenCanvas;
-}
+};

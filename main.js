@@ -108,6 +108,7 @@ Background.prototype.draw = function (ctx) {
     this.game.ctx.fillText("He can RUN!         [← →]", 300, 140);
     this.game.ctx.fillText("He can JUMP!       [spacebar]", 300, 170);
     this.game.ctx.fillText("He can't ESCAPE! [wall collisions]", 300, 200);
+    this.game.ctx.fillText("'d' to draw collision circles", 300, 230);
     Entity.prototype.draw.call(this);
 }
 
@@ -131,11 +132,13 @@ function Spaz(game) {
     this.skidRight = false;
 
     // Entity properties:
-    this.radius = 50;
+    this.radius = 50 / 2;
     this.ground = 300;
     this.speed = 5;
     this.width = 50;
     this.height = 50;
+    this.centerX = this.width / 2;
+    this.centerY = this.ground + (this.height / 2);
     Entity.call(this, game, 0, this.ground);
 }
 
